@@ -1,29 +1,51 @@
-What it is
+# AWS Cargo Package Tracker
+==========================
 
-It's just a small python script I run every hour to check packages at awscargo.com. 
-The service only supports a single notification email per account, and doesn't seem to send repeat notifications when many packages came in at the same time. 
+**Overview**
+------------
 
-I normally dump my on-line orders into my "Notes" app on my iPhone, and I end up with a colon delimited list of description:tracking number pairs. 
+This is a Python script that tracks packages at Awscargo.com using Beautiful Soup and Selenium ChromeDriver.
 
-The front (front.py) is just a minimal Gradio app, where I paste the notes from my phone. It splits them up, trims them from spaces and puts them into a database. 
+**What it does**
 
-The main app runs every hour between work hours (8am - 5pm) from crontab. It performs a log-in to awscargo.com, goes to the "My packages" page and extracts the table from there, using Beautiful Soup. It then checks each row for a tracking number and the price of tax/shipment. 
+The script runs every hour between 8am-5pm to check for new packages on Awscargo.com. It extracts the tracking numbers and prices from 
+the "My Packages" page, then searches for matching orders in a database. If an order is found, it matches up with the package 
+information. The results are sent via Pushover.
 
-After that, it searches the database for orders (inserted from the Gradio app), and tries to match them up with completed shipments. 
+**Requirements**
 
-If everything goes OK, you end up with a list of packages, containing the import/shipment price and a name. If there is no order found, then it's just a tracking number and a price. 
+*   A working installation of Chrome
+*   Matching version of Selenium ChromeDriver
+*   Requirements listed in `requirements.txt`
+*   Virtual environment recommended
 
-It then sends them via Pushover. 
+**Setup**
+---------
 
+1.  Install dependencies using pip: `pip install -r requirements.txt`
+2.  Set up a virtual environment (recommended)
+3.  Configure the `.env` file with Awscargo.com login credentials
 
-Requirements: 
+**Frontend**
+------------
 
-You will need a working installation of Chrome. A matching version of selenium chrome-driver, and everything else in requirements.txt. 
+The frontend is built using Gradio and runs on `front.py`. It takes input from the user's iPhone Notes app, processes it, and stores 
+it in a database.
 
-Using a virtual environment is recommended. 
+**Backend**
+------------
 
-The app uses the awscargo.com login credentials from.env file (and everything else where an os.getenv is used).
+The backend script runs every hour between 8am-5pm from crontab. It performs the following tasks:
 
-It's very niche and very local to a Costa Rican service, but who knows, maybe it helps someone. 
+1.  Logs into Awscargo.com using Beautiful Soup
+2.  Extracts the table from the "My Packages" page
+3.  Checks each row for a tracking number and price
+4.  Searches the database for matching orders
+5.  Sends the results via Pushover
 
+**Usage**
+--------
 
+1.  Run `python main.py` to start the script
+2.  The script will run every hour between 8am-5pm
+3.  Results are sent via Pushover
