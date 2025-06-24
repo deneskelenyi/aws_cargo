@@ -47,7 +47,7 @@ def insert_tracking(text)->str:
             description=description.strip()
             trackingNumber = trackingNumber.strip()
             ret.append("inserted tracking number: "+trackingNumber)
-            retStr+=description+":"+trackingNumber+"\n"
+            retStr+=description+":"+trackingNumber
             sql = '''insert ignore into ship_tracking
         (`tracking`, `description`) values (%s, %s);'''
         
@@ -56,6 +56,10 @@ def insert_tracking(text)->str:
             mydb.commit()
             ins_id= c_dict.lastrowid
             ret.append("inserted tracking number: "+str(ins_id)+":"+description+":"+trackingNumber)
+            if ins_id is not None:
+                retStr+= ": "+ str(ins_id) + "\n"
+            else:
+                retStr+="\n"
         except Exception as ex:
             print("error",ex)
         
