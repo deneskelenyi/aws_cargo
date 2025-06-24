@@ -34,6 +34,8 @@ mydb = mysql.connector.connect(**cparams)
 c_dict = mydb.cursor(dictionary=True)
 
 def insert_tracking(text)->str:
+    mydb = mysql.connector.connect(**cparams)
+    c_dict = mydb.cursor(dictionary=True)
     print("text received",text)
     ret = []
     retStr =""
